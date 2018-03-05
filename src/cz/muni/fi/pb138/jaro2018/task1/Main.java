@@ -68,10 +68,31 @@ public class Main {
      * method. If such a person does not exist, the method returns null.
      */
     public Element increaseSalary(String pidToIncrease, double percent) {
-        // complete the method
-        // you can create also other (private) methods if needed
+        Element personToIncrease = getPersonByPid(pidToIncrease);
+        if (personToIncrease == null) {
+            return null;
+        }
+        Element salary = (Element) ((Element) personToIncrease.getParentNode()).getElementsByTagName("salary").item(0);
+        Double salaryValue = Double.parseDouble(salary.getTextContent());
+        salaryValue *= (1 + percent / 100);
+        salary.setTextContent("" + salaryValue);
 
-        return null;
+        return personToIncrease;
+    }
+
+    private Element getPersonByPid(String pid) {
+        Element result = null;
+        NodeList persons = doc.getElementsByTagName("person");
+        if (persons != null) {
+            for (int i = 0; i < persons.getLength(); i++) {
+                Element person = (Element) persons.item(i);
+                if (person.getAttribute("pid").equals(pid)) {
+                    result = person;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     /**
@@ -88,9 +109,21 @@ public class Main {
      * @return average salary of all heads of division in the company as double.
      */
     public double getHeadAverageSalary() {
-        // complete the method
-        // you can create also other (private) methods if needed
-        return -1;
+        NodeList heads = doc.getElementsByTagName("head");
+        if (heads == null) {
+            return 0;
+        }
+        int headCount = heads.getLength();
+        if (headCount == 0) {
+            return 0;
+        }
+        double averageSalary = 0;
+        for (int i = 0; i < headCount; i++) {
+            Element head = (Element) heads.item(i);
+            averageSalary += Double.parseDouble(((Element) head.getElementsByTagName("salary").item(0)).getTextContent());
+        }
+        averageSalary /= headCount;
+        return averageSalary;
     }
 
     /**
@@ -105,9 +138,14 @@ public class Main {
      * @return the Element person with the given pid and new note added
      */
     public Element addNote(String pid, String note) {
-        // complete the method
-        // you can create also other (private) methods if needed
-        return null;    }
+        Element person = getPersonByPid(pid);
+        if (person != null ) {
+            Element noteToAdd = doc.createElement("note");
+            noteToAdd.setTextContent(note);
+            person.appendChild(noteToAdd);
+        }
+        return person;
+    }
 
     /**
      * **********************************************************************
