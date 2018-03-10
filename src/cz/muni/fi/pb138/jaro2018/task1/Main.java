@@ -107,21 +107,13 @@ public class Main {
      * @return average salary of all heads of division in the company as double.
      */
     public double getHeadAverageSalary() {
-        NodeList heads = doc.getElementsByTagName("head");
-        if (heads == null) {
+        try {
+            XPathExpression expr = xpath.compile("avg(//head/salary)");
+            return (double) expr.evaluate(expr, XPathConstants.NUMBER);
+        } catch (XPathExpressionException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
         }
-        int headCount = heads.getLength();
-        if (headCount == 0) {
-            return 0;
-        }
-        double averageSalary = 0;
-        for (int i = 0; i < headCount; i++) {
-            Element head = (Element) heads.item(i);
-            averageSalary += Double.parseDouble(((Element) head.getElementsByTagName("salary").item(0)).getTextContent());
-        }
-        averageSalary /= headCount;
-        return averageSalary;
     }
 
     /**
