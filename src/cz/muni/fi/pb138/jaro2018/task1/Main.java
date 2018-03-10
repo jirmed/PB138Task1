@@ -17,6 +17,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -41,6 +42,7 @@ public class Main {
      * interface(!) not its implementation
      */
     private final Document doc;
+    private final XPath xpath;
 
     /**
      * Task 1, part A: Complete this method. You are likely to consult the Java
@@ -82,15 +84,11 @@ public class Main {
 
     private Element getPersonByPid(String pid) {
         Element result = null;
-        NodeList persons = doc.getElementsByTagName("person");
-        if (persons != null) {
-            for (int i = 0; i < persons.getLength(); i++) {
-                Element person = (Element) persons.item(i);
-                if (person.getAttribute("pid").equals(pid)) {
-                    result = person;
-                    break;
-                }
-            }
+        try {
+            XPathExpression expr = xpath.compile("//person[@pid=" + pid + "]");
+            result = (Element) expr.evaluate(doc, XPathConstants.NODE);
+        } catch (XPathExpressionException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
@@ -139,7 +137,7 @@ public class Main {
      */
     public Element addNote(String pid, String note) {
         Element person = getPersonByPid(pid);
-        if (person != null ) {
+        if (person != null) {
             Element noteToAdd = doc.createElement("note");
             noteToAdd.setTextContent(note);
             person.appendChild(noteToAdd);
@@ -181,6 +179,10 @@ public class Main {
         // DocumentBuilder pouzijeme pro zpracovani XML dokumentu
         // a ziskame model dokumentu ve formatu W3C DOM
         doc = builder.parse(uri.toString());
+
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        xpath = xPathfactory.newXPath();
+
     }
 
     public void serializetoXML(URI output)
