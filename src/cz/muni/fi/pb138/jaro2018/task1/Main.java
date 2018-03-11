@@ -3,6 +3,7 @@ package cz.muni.fi.pb138.jaro2018.task1;
 import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.IOException;
+import static java.lang.Double.NaN;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -107,19 +108,20 @@ public class Main {
      * @return average salary of all heads of division in the company as double.
      */
     public double getHeadAverageSalary() {
-        double result = 0;
+        return xPathAvg("//head/salary");
+    }
+
+    private double xPathAvg(String xPathNode) {
         try {
             XPathExpression expr;
-            expr = xpath.compile("count(//head/salary)");
-            double empCount = (double) expr.evaluate(doc, XPathConstants.NUMBER);
-            if (empCount > 0) {
-                expr = xpath.compile("sum(//head/salary)");
-                result = (double) expr.evaluate(doc, XPathConstants.NUMBER) / empCount;
-            }
+            return (double) xpath.compile("sum(" + xPathNode + ")").evaluate(doc, XPathConstants.NUMBER)
+                    / (double) xpath.compile("count(" + xPathNode + ")").evaluate(doc, XPathConstants.NUMBER);
         } catch (XPathExpressionException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            return NaN;
+        } catch (ArithmeticException ex) {
+            return NaN;
         }
-        return result;
     }
 
     /**
