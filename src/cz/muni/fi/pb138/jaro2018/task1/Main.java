@@ -107,13 +107,19 @@ public class Main {
      * @return average salary of all heads of division in the company as double.
      */
     public double getHeadAverageSalary() {
+        double result = 0;
         try {
-            XPathExpression expr = xpath.compile("avg(//head/salary)");
-            return (double) expr.evaluate(expr, XPathConstants.NUMBER);
+            XPathExpression expr;
+            expr = xpath.compile("count(//head/salary)");
+            double empCount = (double) expr.evaluate(doc, XPathConstants.NUMBER);
+            if (empCount > 0) {
+                expr = xpath.compile("sum(//head/salary)");
+                result = (double) expr.evaluate(doc, XPathConstants.NUMBER) / empCount;
+            }
         } catch (XPathExpressionException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            return 0;
         }
+        return result;
     }
 
     /**
