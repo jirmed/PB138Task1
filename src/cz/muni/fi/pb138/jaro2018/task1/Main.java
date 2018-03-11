@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -174,6 +175,19 @@ public class Main {
 
         XPathFactory xPathfactory = XPathFactory.newInstance();
         xpath = xPathfactory.newXPath();
+
+        try {
+
+            File file = new File(uri);
+            JAXBContext jaxbContext = JAXBContext.newInstance(Company.class);
+
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            Company company = (Company) jaxbUnmarshaller.unmarshal(file);
+            System.out.println(company);
+
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
 
     }
 

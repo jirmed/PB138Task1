@@ -1,0 +1,125 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="company">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="name" name="name"/>
+                <xs:element type="division" name="division" maxOccurs="unbounded" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>did is required, a string</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element type="position" name="position" maxOccurs="unbounded" minOccurs="0">
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="uniqueDid">
+            <xs:selector xpath="division"/>
+            <xs:field xpath="@did"/>
+        </xs:unique>
+        <xs:unique name="uniquePid">
+            <xs:selector xpath=".//person"/>
+            <xs:field xpath="@pid"/>
+        </xs:unique>
+        <xs:key name="positionId"> 
+            <xs:selector xpath="position"/> 
+            <xs:field xpath="@id"/> 
+        </xs:key> 
+        <xs:keyref name="positionIdref" refer="positionId"> 
+            <xs:selector xpath="division/employees/employee"/> 
+            <xs:field xpath="@position"/> 
+        </xs:keyref> 
+    </xs:element>
+    <xs:simpleType name="name">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="salary">
+        <xs:restriction base="xs:decimal">
+            <xs:fractionDigits value="2" />
+            <xs:minExclusive value="0" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="division">
+        <xs:sequence>
+            <xs:element type="xs:string" name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name is optional and contains a string</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element type="head" name="head" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>head is optional and contains always a person if present</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element type="employees" name="employees">
+                <xs:annotation>
+                    <xs:documentation>employees element contains zero or more employee elts</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="did" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="position">
+        <xs:sequence>
+            <xs:element type="xs:string" name="description"/>
+            <xs:element type="xs:string" name="responsibility"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="id" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="head">
+        <xs:sequence>
+            <xs:element type="person" name="person">
+                <xs:annotation>
+                    <xs:documentation>pid is required, unique, string</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element type="salary" name="salary">
+                <xs:annotation>
+                    <xs:documentation>salary is required, positive number 
+                        with 2 decimal places precision, e.g. 10000.50</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="person">
+        <xs:sequence>
+            <xs:element type="name" name="name">
+                <xs:annotation>
+                    <xs:documentation>name is required, non-empty string</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element type="name" name="surname">
+                <xs:annotation>
+                    <xs:documentation>surname is required, non-empty string</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element type="xs:string" name="note" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>note optional element, repeatable, contains any string</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:int" name="pid" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="employees">
+        <xs:sequence>
+            <xs:element type="employee" name="employee" maxOccurs="unbounded" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>position is neither required nor unique</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="employee">
+        <xs:sequence>
+            <xs:element type="person" name="person" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>employee contains zero or one person  employee contains zero or one person</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element type="salary" name="salary"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="position" use="optional"/>
+    </xs:complexType>
+</xs:schema>

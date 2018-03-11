@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="file:/C:/Users/jirka/OneDrive/Dokumenty/NetBeansProjects/Spring2018%20PB138%20Task%201%20-%20Specification/test/cz/muni/fi/pb138/jaro2018/task1/company.xsd" uri="xml-resources/jaxb/comapny/company.xsd"/>
+</catalog>

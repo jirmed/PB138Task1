@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<schemas xmlns='http://xml.netbeans.org/schema/JAXBWizConfig' destdir='build/generated-sources/jaxb' projectName='Spring2018_PB138_Task1' version='1.0'>
+	<schema type='-xmlschema' package='cz.muni.fi.pb138.jaro2018.task1' name='company'>
+		<xjc-options>
+		</xjc-options>
+		<schema-sources>
+			<schema-source location='xml-resources/jaxb/company/company.xsd' origLocation='test/cz/muni/fi/pb138/jaro2018/task1/company.xsd'/>
+		</schema-sources>
+		<bindings>
+		</bindings>
+		<catalog/>
+	</schema>
+</schemas>
