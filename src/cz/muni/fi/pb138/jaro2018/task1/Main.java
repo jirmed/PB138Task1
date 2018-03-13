@@ -71,16 +71,25 @@ public class Main {
      * method. If such a person does not exist, the method returns null.
      */
     public Element increaseSalary(String pidToIncrease, double percent) {
-        Element personToIncrease = getPersonByPid(pidToIncrease);
-        if (personToIncrease == null) {
+        try {
+            Element personToIncrease = getPersonByPid(pidToIncrease);
+            if (personToIncrease == null) {
+                return null;
+            }
+            final String xPathExpression
+                    = String.format("//person[@pid=%s]/following-sibling::salary[1]", pidToIncrease);
+            Element salary = (Element) xpath
+                    .compile(xPathExpression)
+                    .evaluate(doc, XPathConstants.NODE);
+            Double salaryValue = Double.parseDouble(salary.getTextContent());
+            salaryValue *= (1 + percent / 100);
+            salary.setTextContent("" + salaryValue);
+
+            return personToIncrease;
+        } catch (XPathExpressionException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-        Element salary = (Element) ((Element) personToIncrease.getParentNode()).getElementsByTagName("salary").item(0);
-        Double salaryValue = Double.parseDouble(salary.getTextContent());
-        salaryValue *= (1 + percent / 100);
-        salary.setTextContent("" + salaryValue);
-
-        return personToIncrease;
     }
 
     private Element getPersonByPid(String pid) {
@@ -113,8 +122,10 @@ public class Main {
 
     private double xPathAvg(String xPathNode) {
         try {
-            XPathExpression expr;
-            return (double) xpath.compile("sum(" + xPathNode + ") div count(" + xPathNode + ")").evaluate(doc, XPathConstants.NUMBER);
+            final String xPathExpression = String.format("sum(%1$s) div count(%1$s)", xPathNode);
+            return (double) xpath
+                    .compile(xPathExpression)
+                    .evaluate(doc, XPathConstants.NUMBER);
         } catch (XPathExpressionException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             return NaN;
