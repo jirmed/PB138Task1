@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?><company>
+<?xml version="1.0" encoding="utf-8" standalone="no"?><company xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="company.xsd">
     <name>My Corporate, Ltd.</name>
     <!-- did is required, a string -->
     <division did="production_zlin">
@@ -14,10 +14,10 @@
                 <surname>Novák</surname> 
                 <!-- note optional element, repeatable, contains any string -->  
                 <note>Poznámka</note>   
-            </person>            
+            <note>New note to person 1</note></person>            
             <!-- salary is required, positive number 
             with 2 decimal places precision, e.g. 10000.50 -->
-            <salary>20000.00</salary> 
+            <salary>24000.0</salary> 
         </head>
         <!-- employees element contains zero or more employee elts -->
         <employees>
@@ -58,7 +58,7 @@
         </head>
         <employees>
             <employee position="tester">
-                <person pid="1">
+                <person pid="1001">
                     <name>Jan</name>
                     <surname>Horák</surname>
                 </person>
@@ -105,5 +105,9 @@
     <position id="tester">
         <description>Tester</description>
         <responsibility>tests the software</responsibility>
+    </position>
+    <position id="packaging">
+        <description>Packaging</description>
+        <responsibility>packs the goods</responsibility>
     </position>
 </company>

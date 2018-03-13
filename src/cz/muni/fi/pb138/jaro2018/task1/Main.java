@@ -114,12 +114,9 @@ public class Main {
     private double xPathAvg(String xPathNode) {
         try {
             XPathExpression expr;
-            return (double) xpath.compile("sum(" + xPathNode + ")").evaluate(doc, XPathConstants.NUMBER)
-                    / (double) xpath.compile("count(" + xPathNode + ")").evaluate(doc, XPathConstants.NUMBER);
+            return (double) xpath.compile("sum(" + xPathNode + ") div count(" + xPathNode + ")").evaluate(doc, XPathConstants.NUMBER);
         } catch (XPathExpressionException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            return NaN;
-        } catch (ArithmeticException ex) {
             return NaN;
         }
     }
